@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Common/">
+    <Project Path="Common/Common.Domain/Common.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Shop/">
+    <Project Path="Shop/Shop.Application/Shop.Application.csproj" />
+    <Project Path="Shop/Shop.Domain/Shop.Domain.csproj" />
+    <Project Path="Shop/Shop.Infrasructure/Shop.Infrasructure.csproj" />
+    <Project Path="Shop/Shop.Presentation.Facade/Shop.Presentation.Facade.csproj" />
+    <Project Path="Shop/Shop.Query/Shop.Query.csproj" />
+  </Folder>
+</Solution>
