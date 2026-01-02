@@ -12,7 +12,7 @@ namespace Shop.Domain.UserAgg
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public List<UserRole> Roles { get; set; }
         public List<Wallet> Wallets { get; set; }
         public List<UserAddress> Addresses { get; set; }
