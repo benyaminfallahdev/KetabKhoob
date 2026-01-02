@@ -1,5 +1,7 @@
 ﻿using Common.Domain;
+using Common.Domain.Execptions;
 using Shop.Domain.UserAgg.Enums;
+using Shop.Domain.UserAgg.Services;
 
 namespace Shop.Domain.UserAgg
 {
@@ -15,8 +17,9 @@ namespace Shop.Domain.UserAgg
         public List<Wallet> Wallets { get; set; }
         public List<UserAddress> Addresses { get; set; }
 
-        public User(string name, string family, string phoneNumber, string password, string email, Gender gender)
+        public User(string name, string family, string phoneNumber, string password, string email, Gender gender, IDomainUserService domainUserService)
         {
+            Guard(phoneNumber, email, domainUserService);
             Name = name;
             Family = family;
             PhoneNumber = phoneNumber;
@@ -28,10 +31,13 @@ namespace Shop.Domain.UserAgg
             //Addresses = addresses;
         }
 
-
-        public void Edit(string name, string family, string phoneNumber, string email, Gender gender)
+        public static User RegisterUser(string email, string phoneNumber, string password, IDomainUserService domainUserService)
         {
-
+            return new User("", "", phoneNumber, password, email, null, domainUserService);
+        }
+        public void Edit(string name, string family, string phoneNumber, string email, Gender gender, IDomainUserService domainUserService)
+        {
+            Guard(phoneNumber, email, domainUserService);
             Name = name;
             Family = family;
             PhoneNumber = phoneNumber;
@@ -44,31 +50,61 @@ namespace Shop.Domain.UserAgg
             address.UserId = this.Id;
             Addresses.Add(address);
         }
+        public void DeleteAddress(long AddressId)
+        {
+            var address = Addresses.FirstOrDefault(x => x.Id == AddressId);
+            if (address == null)
+                throw new NullOrEmptyDomainDataException("Address Not Found");
 
+            //address.IsRemoved = true;
+            Addresses.Remove(address);
+
+        }
         public void EditAddress(UserAddress address)
         {
             var OldAddress = Addresses.FirstOrDefault(f => f.Id == address.Id);
             if (OldAddress == null)
-                throw new NullorEmpty;
+                throw new NullOrEmptyDomainDataException("Address Not Found");
 
             Addresses.Remove(OldAddress);
             Addresses.Add(address);
 
         }
 
+        public void ChargeWallet(Wallet wallet)
+        {
 
-    }
-    public class UserAddress : BaseEntity
-    {
-        public long UserId { get; set; }
+            Wallets.Add(wallet);
 
-    }
-    public class UserRole : BaseEntity
-    {
+        }
+        public void SetRoles(List<UserRole> roles)
+        {
+            roles.ForEach(f => f.UserId = this.Id);
+            Roles.Clear();
+            Roles.AddRange(roles);
+        }
 
-    }
-    public class Wallet : BaseEntity
-    {
+
+        public void Guard(string PhoneNumber, string Email, IDomainUserService domainUserService)
+
+        {
+            NullOrEmptyDomainDataException.CheckString(PhoneNumber, nameof(PhoneNumber));
+            NullOrEmptyDomainDataException.CheckString(Email, nameof(Email));
+
+            if (PhoneNumber.Length = !11)
+                throw new InvalidDomainDataException("PhoneNumber is Not Valid");
+
+            if (Email.IsValidEmail == false)
+                throw new InvalidDomainDataException("Email is not Valid");
+
+            if (PhoneNumber != this.PhoneNumber)
+                if (domainUserService.PhoneNumberIsExists(PhoneNumber))
+                    throw new InvalidDomainDataException("شماره تلفن از قبل در سیستم وجود دارد");
+
+            if (Email != this.Email)
+                if (domainUserService.EmailIsExists(Email))
+                    throw new InvalidDomainDataException("آدرس ایمیل از قبل در سیستم وجود دارد");
+        }
 
     }
 }
