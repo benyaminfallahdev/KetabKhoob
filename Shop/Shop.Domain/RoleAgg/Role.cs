@@ -4,7 +4,7 @@ using Shop.Domain.RoleAgg.Enums;
 
 namespace Shop.Domain.RoleAgg
 {
-    public class Role : BaseEntity
+    public class Role : AggregateRoot
     {
 
         public string Title { get; set; }

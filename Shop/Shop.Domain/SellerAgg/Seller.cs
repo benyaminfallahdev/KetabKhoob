@@ -4,7 +4,7 @@ using Shop.Domain.SellerAgg.Enums;
 
 namespace Shop.Domain.SellerAgg
 {
-    public class Seller : BaseEntity
+    public class Seller : AggregateRoot
     {
         public Seller(long userId, string shopName, string nationalCode, SellerStatus status)
         {

@@ -5,7 +5,7 @@ using Shop.Domain.OrderAgg.ValueObjects;
 
 namespace Shop.Domain.OrderAgg
 {
-    public class Order : BaseEntity
+    public class Order : AggregateRoot
     {
         public long UserId { get; set; }
 
